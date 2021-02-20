@@ -31,11 +31,17 @@ class Scrap:
     def data_scrap(self,Postal_code='bilal'):
         browser = self.browser
         dic_new={}
+    try:
+
         #browser.find_element_by_css_selector('a.item').click()
         browser.find_element_by_id('ParcelTab').click()
         elementID = browser.find_element_by_id("PARCEL_ID")
         elementID.send_keys(Postal_code)
         elementID.submit()
+    except Exception as e:
+        print(e,'occure')
+    finally:
+
         src = browser.page_source
         soup = BeautifulSoup(src,'lxml')
         first_data = soup.find('div',{'class':'ui stackable three column grid'})
@@ -57,7 +63,7 @@ class Scrap:
             tax.append(k.get_text().strip())
 
         for l in range(len(tax)):
-
+            
             if 'Tax Year' in str(tax[l]):
                 pre_st = str(tax[l][-4:])
                 for m in range(4):
@@ -69,7 +75,8 @@ class Scrap:
                     dic_new[pre_st+st[m]] = tax[l+m+1].split(':')[1]
         
         time.sleep(random.randint(1,5))
-        self.browser.get('https://pta.waynecounty.com/')
+        browser.get('https://pta.waynecounty.com/')
+        
 
 
         return dic_new
