@@ -1,4 +1,4 @@
-# pta.waynecounty_scraping_with_multiThreading
+# Wayne Michigan tax Payers data scraping.
 
 Scrap this website https://pta.waynecounty.com/
 1. First you have to create Virtualenv
