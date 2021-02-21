@@ -3,6 +3,18 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
 from selenium.webdriver.chrome.options import Options
+from os import system, name 
+
+
+def clear(): 
+  
+    # for windows 
+    if name == 'nt': 
+        _ = system('cls') 
+  
+    # for mac and linux(here, os.name is 'posix') 
+    else: 
+        _ = system('clear') 
 
 
 data = pd.read_excel('abc.xlsx')
@@ -22,7 +34,12 @@ try:
 except Exception as e:
     print( e, "occurred.")
     
+
+def home():
+     browser.get('https://pta.waynecounty.com/')
+    
 def data_scrap(Postal_code):
+    time.sleep(2)
     dic_new={}
     try:
 
@@ -31,9 +48,11 @@ def data_scrap(Postal_code):
         elementID = browser.find_element_by_id("PARCEL_ID")
         elementID.send_keys(Postal_code)
         elementID.submit()
+        
     except Exception as e:
         print(e,'occure')
     finally:
+       
 
         src = browser.page_source
         soup = BeautifulSoup(src,'lxml')
@@ -67,23 +86,32 @@ def data_scrap(Postal_code):
                 for m in range(3):
                     dic_new[pre_st+st[m]] = tax[l+m+1].split(':')[1]
         
-        time.sleep(random.randint(1,5))
+        time.sleep(random.randint(1,3))
         browser.get('https://pta.waynecounty.com/')
+
         
     
     return dic_new
    
-    
 
-initial = 0
-total_data = 10
+clear()
 
-for post in data.iloc[initial:total_data,0]:
+print("waiting... !")
+initial = eval(input("Enter Initial Index : "))
+total_data =  eval(input("Enter Total number of data point from initial Index : "))
+
+print("\n\n ############################################################################################")
+
+for post in data.iloc[initial:total_data+1,0]:
     try:
         data_new = data_new.append(data_scrap(post), ignore_index=True)
+        
+        
     
     except Exception as e:
         print( e, "occurred.")
+print("bye bye..")
+browser.close()
 data_new.to_csv(r'postalIDs.csv')
 
 
